@@ -23,6 +23,7 @@ end
 function Ball:collide()
     local bcenter = (2*self.y + self.height) / 2
     if checkCollision(self, Player) then -- Check Collission with Player
+        -- Based on yPos determine velocity after collission
         local pcenter = (2*Player.y + Player.height) / 2
         self.xVel = -self.xVel
         local cp = bcenter - pcenter
@@ -30,13 +31,15 @@ function Ball:collide()
     end
 
     if checkCollision(self, AI) then -- Check Collission with AI
+        -- Based on yPos determine velocity after collission
         local pcenter = (2*AI.y + AI.height) / 2
         self.xVel = -self.xVel
         local cp = bcenter - pcenter
         self.yVel = cp*5
     end
 
-    if (self.y < 0) then -- Based on yPos determine velocity after collission
+    -- Preventing Ball from going Out of Bounds
+    if (self.y < 0) then
         self.y = 0
         self.yVel = -self.yVel
     elseif (self.y + self.height > love.graphics.getHeight()) then 
@@ -44,12 +47,18 @@ function Ball:collide()
         self.yVel = -self.yVel
     end
 
-    if (self.x < 0) then -- Preventing Ball from going Out of Bounds
-        self.xVel = -self.xVel
-        self.x = 0
-    elseif (self.x + self.width > love.graphics.getWidth()) then
-        self.xVel = - self.xVel
-        self.x = love.graphics.getWidth() - self.width
+    if (self.x < 0) then
+        self.x = (love.graphics.getWidth() - self.width)/2
+        self.y = (love.graphics.getHeight() -self.height)/2
+        self.yVel = 0
+        self.xVel = self.speed
+    end
+
+    if (self.x + self.width > love.graphics.getWidth()) then
+        self.x = (love.graphics.getWidth() - self.width)/2
+        self.y = (love.graphics.getHeight() -self.height)/2
+        self.yVel = 0
+        self.xVel = -self.speed
     end
 end
 
